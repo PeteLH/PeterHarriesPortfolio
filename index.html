@@ -313,16 +313,15 @@
         /* ── EMBER COUNTER ── */
         #ember-count {
             position: fixed;
+            top: 1.5rem;
+            right: 2rem;
             pointer-events: none;
             z-index: 9999;
             font-family: 'Sora', sans-serif;
-            font-size: 0.7rem;
+            font-size: 1.4rem;
             font-weight: 700;
             color: #ff6b00;
             letter-spacing: 0.05em;
-            opacity: 0;
-            transition: opacity 0.3s;
-            transform: translate(14px, -6px);
         }
 
         /* ── EMBER CANVAS ── */
@@ -611,15 +610,13 @@
         // ── EMBER COUNTER ──
         let emberCount = 0;
         const emberCountEl = document.getElementById('ember-count');
+        emberCountEl.textContent = '0';
 
         let mouseX = -999, mouseY = -999;
 
         window.addEventListener('mousemove', e => {
             mouseX = e.clientX;
             mouseY = e.clientY;
-            emberCountEl.style.left = e.clientX + 'px';
-            emberCountEl.style.top = e.clientY + 'px';
-            emberCountEl.style.opacity = '1';
         });
 
         // ── EMBER ANIMATION ──
