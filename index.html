@@ -1,0 +1,787 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Peter Harries - Game Designer Portfolio</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg: #000;
+            --surface: #0d0d0d;
+            --border: #1f1f1f;
+            --border-mid: #2e2e2e;
+            --text: #fff;
+            --text-muted: #888;
+            --text-dim: #444;
+        }
+
+        body {
+            font-family: 'Sora', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        a { color: inherit; text-decoration: none; }
+
+        /* ── HERO ── */
+        .hero {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 6rem 2rem 0;
+        }
+
+        .hero-label {
+            font-size: 0.7rem;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: var(--text-muted);
+        }
+
+        .hero h1 {
+            font-size: clamp(2.8rem, 8vw, 5.5rem);
+            font-weight: 700;
+            line-height: 1.05;
+            letter-spacing: -0.02em;
+            color: #ff6b00;
+        }
+
+        .hero-bio {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            max-width: 34rem;
+        }
+
+        /* ── SECTION WRAPPER ── */
+        .section {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 4rem 2rem;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .section-label {
+            font-size: 0.65rem;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            white-space: nowrap;
+        }
+
+        .section-rule {
+            flex: 1;
+            height: 1px;
+            background: var(--border);
+        }
+
+        /* ── SHARED CARD IMAGE ── */
+        .card-image {
+            width: 100%;
+            display: block;
+            object-fit: cover;
+            background: #000;
+        }
+
+        /* ── SHARED TOP HIGHLIGHT ── */
+        .game-card--empty::before { display: none; }
+
+        .game-card::before,
+        .work-card::before,
+        .jam-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 40%;
+            background: linear-gradient(to bottom, rgba(255,255,255,0.12) 0%, transparent 100%);
+            z-index: 2;
+            pointer-events: none;
+            border-radius: 0.5rem 0.5rem 0 0;
+        }
+
+        /* ── RELEASED TITLES — 2-col grid ── */
+        .games-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.75rem;
+            background: #000;
+        }
+
+        .game-card {
+            position: relative;
+            overflow: hidden;
+            cursor: default;
+            aspect-ratio: 16 / 9;
+            border-radius: 0.5rem;
+        }
+
+        .game-card .card-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            transition: transform 0.5s ease;
+        }
+
+        .game-card:hover .card-image {
+            transform: scale(1.04);
+        }
+
+        .game-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.2) 50%, transparent 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 1.75rem;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .game-card:hover .game-overlay {
+            opacity: 1;
+        }
+
+        .game-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            letter-spacing: -0.01em;
+            margin-bottom: 0.3rem;
+        }
+
+        .game-meta {
+            font-size: 0.7rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: rgba(255,255,255,0.6);
+        }
+
+        /* ── OTHER WORK — 4-col grid ── */
+        .work-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 0.75rem;
+            background: #000;
+        }
+
+        .work-card {
+            position: relative;
+            overflow: hidden;
+            cursor: default;
+            aspect-ratio: 1 / 1;
+            border-radius: 0.5rem;
+        }
+
+        .work-card .card-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            transition: transform 0.5s ease;
+        }
+
+        .work-card:hover .card-image { transform: scale(1.04); }
+
+        .work-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.2) 50%, transparent 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 1.25rem;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .work-card:hover .work-overlay { opacity: 1; }
+
+        .work-title {
+            font-size: 0.9rem;
+            font-weight: 700;
+            margin-bottom: 0.2rem;
+        }
+
+        .work-desc {
+            font-size: 0.72rem;
+            color: rgba(255,255,255,0.6);
+            line-height: 1.45;
+        }
+
+        /* ── GAME JAMS — 5-col grid ── */
+        .jams-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 0.75rem;
+            background: #000;
+        }
+
+        .jam-card {
+            position: relative;
+            overflow: hidden;
+            cursor: default;
+            aspect-ratio: 1 / 1;
+            border-radius: 0.5rem;
+        }
+
+        .jam-card .card-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            transition: transform 0.5s ease;
+        }
+
+        .jam-card:hover .card-image { transform: scale(1.04); }
+
+        .jam-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.2) 50%, transparent 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 1rem;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .jam-card:hover .jam-overlay { opacity: 1; }
+
+        .jam-title {
+            font-size: 0.8rem;
+            font-weight: 700;
+            line-height: 1.3;
+            margin-bottom: 0.2rem;
+        }
+
+        .jam-meta {
+            font-size: 0.62rem;
+            letter-spacing: 0.06em;
+            color: rgba(255,255,255,0.6);
+        }
+
+        /* ── CONTACT — 2-col grid ── */
+        .contact-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.75rem;
+            background: #000;
+            max-width: 36rem;
+        }
+
+        .contact-card {
+            background: var(--bg);
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            transition: opacity 0.2s;
+        }
+
+        .contact-card:hover { opacity: 0.6; }
+
+        .contact-label {
+            font-size: 0.65rem;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: var(--text-muted);
+        }
+
+        .contact-value {
+            font-size: 0.875rem;
+            color: var(--text);
+            word-break: break-all;
+        }
+
+        /* ── EMBER COUNTER ── */
+        #ember-count {
+            position: fixed;
+            pointer-events: none;
+            z-index: 9999;
+            font-family: 'Sora', sans-serif;
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: #ff6b00;
+            letter-spacing: 0.05em;
+            opacity: 0;
+            transition: opacity 0.3s;
+            transform: translate(14px, -6px);
+        }
+
+        /* ── EMBER CANVAS ── */
+        #ember-canvas {
+            position: fixed;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .hero, .section, footer {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* ── FOOTER ── */
+        footer {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+            color: var(--text-dim);
+            font-size: 0.7rem;
+            letter-spacing: 0.08em;
+        }
+
+        /* ── RESPONSIVE ── */
+        @media (max-width: 960px) {
+            .work-grid { grid-template-columns: repeat(2, 1fr); }
+            .jams-grid { grid-template-columns: repeat(3, 1fr); }
+        }
+
+        @media (max-width: 640px) {
+            .hero { padding: 3.5rem 1.25rem 3rem; }
+            .section { padding: 3rem 1.25rem; }
+            .games-grid { grid-template-columns: 1fr; }
+            .work-grid { grid-template-columns: repeat(2, 1fr); }
+            .jams-grid { grid-template-columns: repeat(2, 1fr); }
+            .contact-grid { grid-template-columns: 1fr; max-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="ember-canvas"></canvas>
+    <div id="ember-count"></div>
+
+    <div class="hero">
+        <div class="hero-label" id="heroLabel"></div>
+        <h1 id="heroTitle"></h1>
+        <p class="hero-bio" id="heroBio"></p>
+    </div>
+
+    <section class="section" id="work">
+        <div class="section-header">
+            <span class="section-label">Released Titles</span>
+            <div class="section-rule"></div>
+        </div>
+        <div class="games-grid" id="gamesGrid"></div>
+    </section>
+
+    <section class="section">
+        <div class="section-header">
+            <span class="section-label">Other Work</span>
+            <div class="section-rule"></div>
+        </div>
+        <div class="work-grid" id="workGrid"></div>
+    </section>
+
+    <section class="section">
+        <div class="section-header">
+            <span class="section-label">Game Jams</span>
+            <div class="section-rule"></div>
+        </div>
+        <div class="jams-grid" id="jamsGrid"></div>
+    </section>
+
+    <section class="section" id="contact">
+        <div class="section-header">
+            <span class="section-label">Contact</span>
+            <div class="section-rule"></div>
+        </div>
+        <div class="contact-grid" id="contactGrid"></div>
+    </section>
+
+    <footer id="footer"></footer>
+
+    <script>
+        // ============================================
+        // EDIT YOUR CONTENT HERE
+        // ============================================
+        const PLACEHOLDER = 'https://placehold.co/800x450/141414/2a2a2a';
+
+        const portfolioContent = {
+            name: "Peter Harries",
+            title: "Lead Game Designer",
+            bio: "Play Games // Make Games",
+            releasedTitles: [
+                {
+                    title: "Killrun",
+                    image: 'images/Killrun.jpg',
+                    description: "",
+                    role: "Senior Game Designer",
+                    studio: "Bulkhead",
+                    platforms: [],
+                },
+                {
+                    title: "The Texas Chain Saw Massacre",
+                    image: 'images/Texas-Chainsaw-Massacre.jpg',
+                    description: "",
+                    role: "Senior Game Designer",
+                    studio: "Sumo Digital",
+                    platforms: ["PC", "Xbox One", "PS4", "PS5", "Xbox Series X/S"],
+                },
+                {
+                    title: "Hotshot Racing",
+                    image: 'images/hotshotracing.jpg',
+                    description: "Multiplayer front end flow and ELO ranking system design for this retro-style arcade racer.",
+                    role: "Senior Game Designer",
+                    studio: "Sumo Digital",
+                    platforms: ["PC", "Xbox One", "PS4", "Switch"],
+                },
+                {
+                    title: "Team Sonic Racing",
+                    image: 'images/TeamSonicRacing.jpg',
+                    description: "Designed the Team Adventure campaign, progression systems, and Wisp weapon behaviours and balancing.",
+                    role: "Senior Game Designer",
+                    studio: "Sumo Digital",
+                    platforms: ["PC", "Xbox One", "PS4", "Switch"],
+                },
+                {
+                    title: "The Black Death",
+                    image: 'images/TheBlackDeath.jpg',
+                    description: "Managed early access development schedules, publisher communications, and community management.",
+                    role: "Producer",
+                    studio: "Small Impact Games",
+                    platforms: ["PC"],
+                },
+                {
+                    title: "B.Loop",
+                    image: 'images/BLoop.jpg',
+                    description: "Designed and programmed a mobile casual game, handling gameplay balance and economic systems.",
+                    role: "Designer / Programmer",
+                    studio: "Butcherlab",
+                    platforms: ["iOS", "Android"],
+                },
+                {
+                    title: "Asphalt 8: Airborne",
+                    image: 'images/Asphalt8.jpg',
+                    description: "DLC car balancing, new feature documentation for QA, and bug-fixing ahead of live updates.",
+                    role: "Designer",
+                    studio: "Gameloft",
+                    platforms: ["iOS", "Android"],
+                },
+                {
+                    title: "Alien: Isolation",
+                    image: 'images/AlienIsolation.jpg',
+                    description: "In-house tools QA, test plan creation, and build deployment management across development branches.",
+                    role: "Tools QA",
+                    studio: "Creative Assembly",
+                    platforms: ["PC", "Xbox One", "PS4", "Xbox 360", "PS3"],
+                },
+                {
+                    title: "Forza Horizon",
+                    image: 'images/ForzaHorizon.jpg',
+                    description: "Coordinated international QA test cycles, bug reporting, and led regression testing.",
+                    role: "QA",
+                    studio: "Microsoft",
+                    platforms: ["Xbox 360"],
+                },
+            ],
+            otherWork: [
+                {
+                    title: "ELO Machine",
+                    image: 'images/Elo_machine.png',
+                    description: "ELO rating simulator tool.",
+                },
+                {
+                    title: "UE4 Bomb Plant / Defuse",
+                    image: 'images/ue4_bomp_plant.png',
+                    description: "Bomb plant and defuse mechanic prototype built in Unreal Engine 4.",
+                },
+                {
+                    title: "Interactive Props",
+                    image: 'images/Interactive_props.jpg',
+                    description: "Interactive props system prototype in Unity/C#.",
+                },
+                {
+                    title: "2D Character & Abilities",
+                    image: 'images/farcry_cover.png',
+                    description: "2D character controller and abilities prototype.",
+                },
+            ],
+            gameJams: [
+                { title: "A Death in the West", image: 'images/TheoCover.png',  jam: "Ludum Dare 44", year: "2019" },
+                { title: "Oil Tycoon XXL",      image: 'images/oiltycoon.jpg',  jam: "Ludum Dare 40", year: "2017" },
+                { title: "Snowblind",           image: 'images/snowblind.png',  jam: "Ludum Dare 34", year: "2014" },
+                { title: "Experiment #532",     image: 'images/EXP_532.png',    jam: "Ludum Dare 31", year: "2014" },
+                { title: "I Like Big Bombs",    image: 'images/ilbb.png',       jam: "Ludum Dare 29", year: "2014" },
+            ],
+            contact: {
+                email: "Pete_Harries@hotmail.co.uk",
+                linktree: "https://linktr.ee/PeteHarries",
+            },
+        };
+        // ============================================
+        // END EDIT SECTION
+        // ============================================
+
+        document.getElementById('heroLabel').textContent = portfolioContent.title;
+        document.getElementById('heroTitle').textContent = portfolioContent.name;
+        document.getElementById('heroBio').textContent = portfolioContent.bio;
+
+        const gamesGrid = document.getElementById('gamesGrid');
+        portfolioContent.releasedTitles.forEach(game => {
+            const card = document.createElement('div');
+            card.className = 'game-card';
+            card.innerHTML = `
+                <img class="card-image" src="${game.image}" alt="${game.title}">
+                <div class="game-overlay">
+                    <div class="game-title">${game.title}</div>
+                    <div class="game-meta">${game.role} &middot; ${game.studio}</div>
+                </div>
+            `;
+            gamesGrid.appendChild(card);
+        });
+        if (portfolioContent.releasedTitles.length % 2 !== 0) {
+            const filler = document.createElement('div');
+            filler.className = 'game-card game-card--empty';
+            gamesGrid.appendChild(filler);
+        }
+
+        const workGrid = document.getElementById('workGrid');
+        portfolioContent.otherWork.forEach(work => {
+            const card = document.createElement('div');
+            card.className = 'work-card';
+            card.innerHTML = `
+                <img class="card-image" src="${work.image}" alt="${work.title}">
+                <div class="work-overlay">
+                    <div class="work-title">${work.title}</div>
+                    <div class="work-desc">${work.description}</div>
+                </div>
+            `;
+            workGrid.appendChild(card);
+        });
+
+        const jamsGrid = document.getElementById('jamsGrid');
+        portfolioContent.gameJams.forEach(jam => {
+            const card = document.createElement('div');
+            card.className = 'jam-card';
+            card.innerHTML = `
+                <img class="card-image" src="${jam.image}" alt="${jam.title}">
+                <div class="jam-overlay">
+                    <div class="jam-title">${jam.title}</div>
+                    <div class="jam-meta">${jam.jam} &middot; ${jam.year}</div>
+                </div>
+            `;
+            jamsGrid.appendChild(card);
+        });
+
+        const contactGrid = document.getElementById('contactGrid');
+
+        const emailCard = document.createElement('a');
+        emailCard.href = `mailto:${portfolioContent.contact.email}`;
+        emailCard.className = 'contact-card';
+        emailCard.innerHTML = `
+            <div class="contact-label">Email</div>
+            <div class="contact-value">${portfolioContent.contact.email}</div>
+        `;
+        contactGrid.appendChild(emailCard);
+
+        const linktreeCard = document.createElement('a');
+        linktreeCard.href = portfolioContent.contact.linktree;
+        linktreeCard.target = '_blank';
+        linktreeCard.rel = 'noopener noreferrer';
+        linktreeCard.className = 'contact-card';
+        linktreeCard.innerHTML = `
+            <div class="contact-label">Linktree</div>
+            <div class="contact-value">linktr.ee/PeteHarries</div>
+        `;
+        contactGrid.appendChild(linktreeCard);
+
+        document.getElementById('footer').textContent = `© ${new Date().getFullYear()} ${portfolioContent.name}`;
+
+        // ── EMBER COUNTER ──
+        let emberCount = 0;
+        const emberCountEl = document.getElementById('ember-count');
+
+        let mouseX = -999, mouseY = -999;
+
+        window.addEventListener('mousemove', e => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+            emberCountEl.style.left = e.clientX + 'px';
+            emberCountEl.style.top = e.clientY + 'px';
+            emberCountEl.style.opacity = '1';
+        });
+
+        // ── EMBER ANIMATION ──
+        const canvas = document.getElementById('ember-canvas');
+        const ctx = canvas.getContext('2d');
+        const EMBER_COLOR = '#ff6b00';
+
+        function resize() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        resize();
+        window.addEventListener('resize', resize);
+
+        const EMBER_COLORS = ['#ff6b00', '#ff8800', '#ffaa00', '#ffcc00', '#ff4400', '#cc2200', '#ffe0a0'];
+
+        class Ember {
+            constructor() { this.reset(true); }
+            reset(initial) {
+                this.x = Math.random() * canvas.width;
+                this.y = initial ? Math.random() * canvas.height : canvas.height + 10;
+                // wide size range: tiny wisps to chunky glowing chunks
+                const tier = Math.random();
+                this.radius = tier < 0.5  ? Math.random() * 0.8 + 0.2   // tiny
+                            : tier < 0.82 ? Math.random() * 1.4 + 0.9   // medium
+                            :               Math.random() * 2.2 + 2.0;  // large
+                this.color = EMBER_COLORS[Math.floor(Math.random() * EMBER_COLORS.length)];
+                this.speedY = Math.random() * 0.45 + 0.2;
+                this.drift = (Math.random() - 0.5) * 0.3;
+                this.wobble = (Math.random() - 0.5) * 0.006;
+                this.opacity = Math.random() * 0.55 + 0.2;
+                this.opacityMax = Math.random() * 0.3 + 0.5;
+                this.opacityMin = Math.random() * 0.1 + 0.05;
+                this.flicker = Math.random() * 0.025 + 0.006;
+                this.flickerDir = 1;
+                this.glow = this.radius > 2 ? 12 : 5;
+            }
+            update() {
+                this.y -= this.speedY;
+                this.x += this.drift;
+                this.drift += this.wobble;
+                this.opacity += this.flicker * this.flickerDir;
+                if (this.opacity > this.opacityMax || this.opacity < this.opacityMin) this.flickerDir *= -1;
+                if (this.y < -10) this.reset(false);
+            }
+            draw() {
+                ctx.save();
+                ctx.globalAlpha = this.opacity;
+                ctx.shadowBlur = this.glow;
+                ctx.shadowColor = this.color;
+                ctx.fillStyle = this.color;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.restore();
+            }
+        }
+
+        const embers = Array.from({ length: 80 }, () => new Ember());
+        const explosions = [];
+
+        class Spark {
+            constructor(x, y) {
+                this.x = x;
+                this.y = y;
+                const angle = Math.random() * Math.PI * 2;
+                const speed = Math.random() * 4 + 1.5;
+                this.vx = Math.cos(angle) * speed;
+                this.vy = Math.sin(angle) * speed;
+                this.radius = Math.random() * 1.6 + 0.6;
+                this.opacity = 1;
+                this.decay = Math.random() * 0.03 + 0.02;
+                this.gravity = 0.08;
+            }
+            update() {
+                this.x += this.vx;
+                this.y += this.vy;
+                this.vy += this.gravity;
+                this.vx *= 0.97;
+                this.opacity -= this.decay;
+            }
+            draw() {
+                ctx.save();
+                ctx.globalAlpha = Math.max(0, this.opacity);
+                ctx.shadowBlur = 8;
+                ctx.shadowColor = EMBER_COLOR;
+                ctx.fillStyle = EMBER_COLOR;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.restore();
+            }
+            get dead() { return this.opacity <= 0; }
+        }
+
+        window.addEventListener('click', e => {
+            const mx = e.clientX;
+            const my = e.clientY;
+            const HIT = 28;
+
+            embers.forEach(ember => {
+                const dx = ember.x - mx;
+                const dy = ember.y - my;
+                if (Math.sqrt(dx * dx + dy * dy) < HIT) {
+                    for (let i = 0; i < 28; i++) explosions.push(new Spark(ember.x, ember.y));
+                    ember.reset(false);
+                    emberCount++;
+                    emberCountEl.textContent = emberCount;
+                }
+            });
+        });
+
+        function drawReticule(x, y) {
+            const r = 9;
+            const gap = 2.5;
+            const lineLen = 4;
+            ctx.save();
+            ctx.strokeStyle = '#ff6b00';
+            ctx.lineWidth = 1.5;
+            ctx.shadowBlur = 8;
+            ctx.shadowColor = '#ff6b00';
+            ctx.globalAlpha = 0.9;
+            // circle
+            ctx.beginPath();
+            ctx.arc(x, y, r, 0, Math.PI * 2);
+            ctx.stroke();
+            // crosshair lines with gap
+            const arms = [[0,-1],[0,1],[-1,0],[1,0]];
+            arms.forEach(([dx, dy]) => {
+                ctx.beginPath();
+                ctx.moveTo(x + dx * (r + gap), y + dy * (r + gap));
+                ctx.lineTo(x + dx * (r + gap + lineLen), y + dy * (r + gap + lineLen));
+                ctx.stroke();
+            });
+            ctx.restore();
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            embers.forEach(e => { e.update(); e.draw(); });
+            for (let i = explosions.length - 1; i >= 0; i--) {
+                explosions[i].update();
+                explosions[i].draw();
+                if (explosions[i].dead) explosions.splice(i, 1);
+            }
+
+            // check if hovering near any ember
+            let targeted = null;
+            for (const e of embers) {
+                const dx = e.x - mouseX, dy = e.y - mouseY;
+                if (Math.sqrt(dx * dx + dy * dy) < 28) { targeted = e; break; }
+            }
+            if (targeted) {
+                drawReticule(targeted.x, targeted.y);
+                document.body.style.cursor = 'none';
+            } else {
+                document.body.style.cursor = '';
+            }
+
+            requestAnimationFrame(animate);
+        }
+        animate();
+    </script>
+</body>
+</html>
