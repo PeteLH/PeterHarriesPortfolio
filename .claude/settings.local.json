@@ -1,0 +1,17 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:www.peterharries.co.uk)",
+      "WebFetch(domain:www.shapes.gallery)",
+      "mcp__Claude_in_Chrome__tabs_context_mcp",
+      "WebSearch",
+      "WebFetch(domain:store.steampowered.com)",
+      "WebFetch(domain:www.igdb.com)",
+      "WebFetch(domain:www.mobygames.com)",
+      "WebFetch(domain:steamdb.info)",
+      "WebFetch(domain:www.dlcompare.com)",
+      "Bash(gh auth *)",
+      "PowerShell(gh auth status 2>&1)"
+    ]
+  }
+}
